@@ -1,16 +1,24 @@
 package kg.varis.taskmanagerwithmvvm.home
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kg.varis.taskmanagerwithmvvm.model.TaskModel
 
-class HomeViewModel : ViewModel() {
+class ViewModels: ViewModel() {
 
-    var list = MutableLiveData<ArrayList<TaskModel>>()
-    private var taskList = arrayListOf<TaskModel>()
+    private val _list = MutableLiveData<MutableList<TaskModel>>()
+    val list: LiveData<MutableList<TaskModel>>
+        get() = _list
+    val listTask = mutableListOf<TaskModel>()
 
-    fun addData(task: TaskModel) {
-        taskList.add(task)
-        list.postValue(taskList)
+    fun addTask(lists: TaskModel) {
+        listTask.add(lists)
+        _list.value = listTask
+    }
+
+    fun deleteTask(task: TaskModel) {
+        listTask.remove(task)
+        _list.value = listTask
     }
 }

@@ -1,42 +1,23 @@
 package kg.varis.taskmanagerwithmvvm.task
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Toast
-import androidx.core.os.bundleOf
-import androidx.core.widget.addTextChangedListener
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.setFragmentResult
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
+import kg.varis.taskmanagerwithmvvm.BaseFragment
+import kg.varis.taskmanagerwithmvvm.R
 import kg.varis.taskmanagerwithmvvm.databinding.FragmentTaskBinding
-import kg.varis.taskmanagerwithmvvm.home.HomeViewModel
+import kg.varis.taskmanagerwithmvvm.home.HomeFragment
 import kg.varis.taskmanagerwithmvvm.model.TaskModel
 
-class TaskFragment : Fragment() {
-
-    private lateinit var binding: FragmentTaskBinding
-    private lateinit var viewModel: HomeViewModel
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentTaskBinding.inflate(inflater, container, false)
-        return binding.root
+class TaskFragment : BaseFragment<FragmentTaskBinding>(R.layout.fragment_task) {
+    override fun inflateViewBinding(): FragmentTaskBinding {
+        return FragmentTaskBinding.inflate(layoutInflater)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
+    override fun initView() {
         binding.btnSave.setOnClickListener {
-            var task = TaskModel(binding.etTitle.text.toString())
-            viewModel.addData(task)
-            findNavController().navigateUp()
+            val result = TaskModel(binding.etTitle.text.toString(), false)
+            viewModel.addTask(result)
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.container, HomeFragment()).commit()
         }
     }
-
 
 }
